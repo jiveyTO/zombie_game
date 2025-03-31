@@ -10,11 +10,34 @@
             display: block;
             margin: 0 auto;
             border: 2px solid #fff;
+            width: 100%;
+            height: 100vh; /* Make the canvas take up the full height of the viewport */
+        }
+
+        .touch-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        #downButton {
+            bottom: 90px; /* Place it slightly above the up button */
         }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas" width="1000" height="600"></canvas>
+    <button id="upButton" class="touch-button">↑</button>
+    <button id="downButton" class="touch-button">↓</button>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -128,31 +151,22 @@
             }
         });
 
-        document.addEventListener('touchstart', e => {
-            const touchY = e.touches[0].clientY;
-
-            if (touchY < player.y && player.y > 0) {
-                player.y -= 10; // Move up
-            } else if (touchY > player.y + player.height && player.y < canvas.height - player.height) {
-                player.y += 10; // Move down
-            }
-
-            bullets.push({ x: player.x + player.width, y: player.y + player.height / 2 - 5, width: 10, height: 5, color: 'yellow' });
-            playShootSound();
+        document.getElementById('upButton').addEventListener('touchstart', () => {
+            if (player.y > 0) player.y -= 10; // Move player up
         });
-
-        document.addEventListener('touchmove', e => {
-            const touchY = e.touches[0].clientY;
-
-            if (touchY < player.y && player.y > 0) {
-                player.y -= 10; // Move up
-            } else if (touchY > player.y + player.height && player.y < canvas.height - player.height) {
-                player.y += 10; // Move down
-            }
+        document.getElementById('downButton').addEventListener('touchstart', () => {
+            if (player.y < canvas.height - player.height) player.y += 10; // Move player down
         });
 
         setInterval(spawnZombie, 1000);
         gameLoop();
+
+        // Ensure canvas adjusts to screen size
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            player.y = canvas.height / 2 - player.height / 2; // Re-center the player on resize
+        });
     </script>
 </body>
 </html>
