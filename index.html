@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <title>Zombie Shooter Game</title>
     <style>
         canvas {
@@ -29,8 +29,12 @@
             z-index: 20; /* Higher z-index to ensure the buttons are above the canvas */
         }
 
+        #upButton {
+            bottom: 90px; /* Up button above the down button */
+        }
+
         #downButton {
-            bottom: 90px; /* Place it slightly above the up button */
+            bottom: 20px; /* Place it slightly below the up button */
         }
     </style>
 </head>
@@ -151,11 +155,21 @@
             }
         });
 
-        document.getElementById('upButton').addEventListener('touchstart', () => {
-            if (player.y > 0) player.y -= 10; // Move player up
+        document.addEventListener('touchstart', (e) => {
+            const touchY = e.touches[0].clientY;
+            if (touchY < player.y && player.y > 0) {
+                player.y -= 10; // Move up
+            } else if (touchY > player.y + player.height && player.y < canvas.height - player.height) {
+                player.y += 10; // Move down
+            }
         });
-        document.getElementById('downButton').addEventListener('touchstart', () => {
-            if (player.y < canvas.height - player.height) player.y += 10; // Move player down
+
+        document.addEventListener('touchend', (e) => {
+            // Handle shooting on touch end
+            if (e.touches.length === 0) {
+                bullets.push({ x: player.x + player.width, y: player.y + player.height / 2 - 5, width: 10, height: 5, color: 'yellow' });
+                playShootSound();
+            }
         });
 
         setInterval(spawnZombie, 1000);
