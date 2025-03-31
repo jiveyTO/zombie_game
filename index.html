@@ -28,20 +28,10 @@
             cursor: pointer;
             z-index: 20; /* Higher z-index to ensure the buttons are above the canvas */
         }
-
-        #upButton {
-            bottom: 20px; /* Up button now at the bottom */
-        }
-
-        #downButton {
-            bottom: 90px; /* Down button now below the up button */
-        }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas" width="1000" height="600"></canvas>
-    <button id="upButton" class="touch-button">↑</button>
-    <button id="downButton" class="touch-button">↓</button>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -163,19 +153,9 @@
                 player.y += 10; // Move down
             }
 
-            // Shoot on touchstart (only if the touch is not used for movement)
-            if (e.target !== document.getElementById('upButton') && e.target !== document.getElementById('downButton')) {
-                bullets.push({ x: player.x + player.width, y: player.y + player.height / 2 - 5, width: 10, height: 5, color: 'yellow' });
-                playShootSound();
-            }
-        });
-
-        document.addEventListener('touchend', (e) => {
-            // Handle shooting on touch end
-            if (e.touches.length === 0) {
-                bullets.push({ x: player.x + player.width, y: player.y + player.height / 2 - 5, width: 10, height: 5, color: 'yellow' });
-                playShootSound();
-            }
+            // Automatically shoot when moving
+            bullets.push({ x: player.x + player.width, y: player.y + player.height / 2 - 5, width: 10, height: 5, color: 'yellow' });
+            playShootSound();
         });
 
         setInterval(spawnZombie, 1000);
