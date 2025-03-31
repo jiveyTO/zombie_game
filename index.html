@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <title>Zombie Shooter Game</title>
     <style>
         canvas {
@@ -30,11 +30,11 @@
         }
 
         #upButton {
-            bottom: 90px; /* Up button above the down button */
+            bottom: 20px; /* Up button now at the bottom */
         }
 
         #downButton {
-            bottom: 20px; /* Place it slightly below the up button */
+            bottom: 90px; /* Down button now below the up button */
         }
     </style>
 </head>
@@ -161,6 +161,12 @@
                 player.y -= 10; // Move up
             } else if (touchY > player.y + player.height && player.y < canvas.height - player.height) {
                 player.y += 10; // Move down
+            }
+
+            // Shoot on touchstart (only if the touch is not used for movement)
+            if (e.target !== document.getElementById('upButton') && e.target !== document.getElementById('downButton')) {
+                bullets.push({ x: player.x + player.width, y: player.y + player.height / 2 - 5, width: 10, height: 5, color: 'yellow' });
+                playShootSound();
             }
         });
 
