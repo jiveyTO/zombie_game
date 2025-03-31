@@ -128,6 +128,29 @@
             }
         });
 
+        document.addEventListener('touchstart', e => {
+            const touchY = e.touches[0].clientY;
+
+            if (touchY < player.y && player.y > 0) {
+                player.y -= 10; // Move up
+            } else if (touchY > player.y + player.height && player.y < canvas.height - player.height) {
+                player.y += 10; // Move down
+            }
+
+            bullets.push({ x: player.x + player.width, y: player.y + player.height / 2 - 5, width: 10, height: 5, color: 'yellow' });
+            playShootSound();
+        });
+
+        document.addEventListener('touchmove', e => {
+            const touchY = e.touches[0].clientY;
+
+            if (touchY < player.y && player.y > 0) {
+                player.y -= 10; // Move up
+            } else if (touchY > player.y + player.height && player.y < canvas.height - player.height) {
+                player.y += 10; // Move down
+            }
+        });
+
         setInterval(spawnZombie, 1000);
         gameLoop();
     </script>
